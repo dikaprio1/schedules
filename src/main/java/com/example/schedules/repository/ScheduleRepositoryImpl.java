@@ -4,12 +4,16 @@ package com.example.schedules.repository;
 import com.example.schedules.dto.ScheduleResponseDto;
 import com.example.schedules.entity.Schedule;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -36,6 +40,27 @@ public class ScheduleRepositoryImpl implements ScheduleRepository{
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
 
         return new ScheduleResponseDto(key.longValue(), schedule.getTitle(), schedule.getAuthor_name(),schedule.getPassword(),schedule.getCreated_at(),schedule.getUpdated_at());
+    }
 
+    @Override
+    public List<ScheduleResponseDto> findAllSchedules() {
+        return jdbcTemplate.query("select * from schedules", scheduleRowMapper());
+    }
+
+    private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
+        return new RowMapper<ScheduleResponseDto>() {
+            @Override
+            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new ScheduleResponseDto(
+                        rs.getLong("id"),
+                        rs.getString("title"),
+                        rs.getString("author_name"),
+                        rs.getString("password"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getTimestamp("updated_at").toLocalDateTime()
+                );
+            }
+
+        };
     }
 }

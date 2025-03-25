@@ -23,7 +23,15 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public List<ScheduleResponseDto> findMemoById(){
+    public List<ScheduleResponseDto> findAllSchedules(){
         return scheduleService.findAllSchedules();
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id){
+        return new ResponseEntity<>(scheduleService.findScheduleById(id),HttpStatus.OK);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> updateScheduleById(@PathVariable Long id,@RequestBody ScheduleRequestDto requestDto){
+        return new ResponseEntity<>(scheduleService.updateSchedule(id,requestDto),HttpStatus.OK);
     }
 }

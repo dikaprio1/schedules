@@ -23,11 +23,4 @@ public class Schedule {
         this.created_at = LocalDateTime.now();
         this.updated_at = LocalDateTime.now();
     }
-
-
-    public void update(ScheduleRequestDto RequestDto){
-        this.title=RequestDto.getTitle();
-        this.author_name=RequestDto.getAuthor_name();
-        this.password = RequestDto.getPassword();
-    }
 }

@@ -4,11 +4,13 @@ package com.example.schedules.repository;
 import com.example.schedules.dto.ScheduleRequestDto;
 import com.example.schedules.dto.ScheduleResponseDto;
 import com.example.schedules.entity.Schedule;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -58,6 +60,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepository{
     public int updateSchedule(Long id, ScheduleRequestDto requestDto){
         return jdbcTemplate.update("update schedules set title = ?, author_name = ? where id = ?", requestDto.getTitle(), requestDto.getAuthor_name(), id);
     }
+    @Override
+    public int deleteSchedule(Long id,String password){
+        return jdbcTemplate.update("delete from schedules where id = ?", id);
+    }
+
 
 
 
